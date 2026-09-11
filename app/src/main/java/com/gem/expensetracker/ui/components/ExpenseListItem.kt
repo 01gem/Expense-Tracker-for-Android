@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.gem.expensetracker.data.Expense
 import com.gem.expensetracker.ui.theme.categoryColor
 
+@Suppress("DEPRECATION")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpenseListItem(
