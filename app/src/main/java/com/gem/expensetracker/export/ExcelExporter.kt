@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.os.Environment
 import android.provider.MediaStore
-import com.gem.expensetracker.data.CategoryType
 import com.gem.expensetracker.data.Expense
 import org.dhatim.fastexcel.Workbook
 import java.io.OutputStream

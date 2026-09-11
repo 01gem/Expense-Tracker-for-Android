@@ -1,7 +1,6 @@
 package com.gem.expensetracker.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -45,7 +44,7 @@ fun MonthDetailScreen(
     val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault())
     val title = try {
         YearMonth.parse(yearMonth).format(formatter)
-    } catch (ignore: Exception) {
+    } catch (_: Exception) {
         yearMonth
     }
 
