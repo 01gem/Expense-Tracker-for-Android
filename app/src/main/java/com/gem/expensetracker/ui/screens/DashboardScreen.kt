@@ -1,6 +1,5 @@
 package com.gem.expensetracker.ui.screens
 
-import android.widget.Toast
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -22,23 +21,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -47,7 +39,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gem.expensetracker.ui.components.EmptyState
 import com.gem.expensetracker.ui.components.GlowingLineChart
 import com.gem.expensetracker.viewmodel.ExpenseViewModel
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -60,10 +51,6 @@ fun DashboardScreen(
     val yearTotal by viewModel.yearTotal.collectAsStateWithLifecycle()
     val monthlyTotals by viewModel.monthlyTotals.collectAsStateWithLifecycle()
     val selectedYear by viewModel.selectedYear.collectAsStateWithLifecycle()
-    
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-    var isExporting by remember { mutableStateOf(false) }
 
     val animatedTotal by animateFloatAsState(
         targetValue = yearTotal.toFloat(),
@@ -82,40 +69,6 @@ fun DashboardScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        // Top row with Export
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.End
-        ) {
-            if (isExporting) {
-                CircularProgressIndicator(modifier = Modifier.size(24.dp))
-            } else {
-                IconButton(onClick = {
-                    scope.launch {
-                        isExporting = true
-                        try {
-                            val result = viewModel.exportToExcel(context)
-                            Toast.makeText(
-                                context,
-                                result.getOrElse { "Export failed: ${it.message}" },
-                                Toast.LENGTH_LONG
-                            ).show()
-                        } catch (e: Exception) {
-                            Toast.makeText(
-                                context,
-                                "Export failed: ${e.message}",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        } finally {
-                            isExporting = false
-                        }
-                    }
-                }) {
-                    Icon(Icons.Default.FileDownload, contentDescription = "Export to Excel")
-                }
-            }
-        }
-
         // Year Switcher
         Row(
             modifier = Modifier.fillMaxWidth(),
