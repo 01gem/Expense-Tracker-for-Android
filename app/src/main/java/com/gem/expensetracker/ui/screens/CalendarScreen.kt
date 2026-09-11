@@ -77,7 +77,8 @@ fun CalendarScreen(
                 items(filteredExpenses, key = { it.id }) { expense ->
                     ExpenseListItem(
                         expense = expense,
-                        onDelete = { viewModel.deleteExpense(expense) }
+                        onDelete = { viewModel.deleteExpense(expense) },
+                        showCategoryColor = false
                     )
                 }
             }

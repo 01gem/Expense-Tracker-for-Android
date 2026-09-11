@@ -23,6 +23,7 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,7 +36,8 @@ import com.gem.expensetracker.ui.theme.categoryColor
 fun ExpenseListItem(
     expense: Expense,
     onDelete: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showCategoryColor: Boolean = true
 ) {
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = {
@@ -54,6 +56,7 @@ fun ExpenseListItem(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+                    .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.error)
                     .padding(horizontal = 24.dp),
                 contentAlignment = Alignment.CenterEnd
@@ -76,12 +79,14 @@ fun ExpenseListItem(
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(
-                    modifier = Modifier
-                        .width(6.dp)
-                        .fillMaxHeight()
-                        .background(categoryColor(expense.category))
-                )
+                if (showCategoryColor) {
+                    Box(
+                        modifier = Modifier
+                            .width(6.dp)
+                            .fillMaxHeight()
+                            .background(categoryColor(expense.category))
+                    )
+                }
                 
                 Column(
                     modifier = Modifier
