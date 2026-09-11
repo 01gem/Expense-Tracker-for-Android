@@ -1,28 +1,100 @@
-# 💸 ExpenseTracker
-
 <div align="center">
-  <!-- Replace the URL below with a link to your preferred aesthetic animated GIF -->
-  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTN5em84MHNnNTJxa204dzBuOXpjdjY1MnF3YmNzdHZsOGxsMTg0YiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Q8JhKDsvVxPRS/giphy.gif" width="200" alt="Animated Aesthetic Character">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:FFB703,100:121212&height=200&section=header&text=Expense%20Tracker&fontSize=48&fontColor=FFFFFF&animation=fadeIn&fontAlignY=38&desc=Track%20every%20peso%2C%20one%20tap%20at%20a%20time&descAlignY=58&descSize=18" width="100%"/>
+
+<img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&size=22&pause=1000&color=FFB703&center=true&vCenter=true&width=460&lines=%F0%9F%92%B8+Log+it.;%F0%9F%93%8A+See+it.;%F0%9F%93%A5+Export+it.;%F0%9F%94%81+Repeat." alt="Typing SVG" />
+
+**A native Android app for logging daily expenses, watching the year add up, and exporting everything to Excel — no account, no cloud, no ads.**
+
 </div>
 
 ---
 
-## Overview
-ExpenseTracker is a native Android application designed to streamline personal financial management. Built for efficient local administration, this app empowers users to log daily transactions, monitor spending habits, and handle dynamic financial calculations—including seamless conversions across currencies like USD, CAD, and PHP.
+## ✨ Features
 
-## Development Methodology
-The application architecture is conceptualized using the **Input Process Output (IPO) model**, ensuring a clean flow of financial data from user entry, through local processing, to final analytical reporting. 
+| | |
+|---|---|
+| 🏠 **Dashboard** | Big animated yearly total + a glowing monthly line chart. Tap any month to drill into it. |
+| ➕ **Add Expense** | Amount, category chips (color-coded), an optional note, and a native date picker. |
+| 📅 **Calendar** | Pick any date on a Material 3 calendar and see exactly what you spent that day. |
+| 🏆 **Leaderboard** | Categories ranked by total spend — see what's actually draining your wallet. |
+| 📁 **Month Detail** | Every expense for a given month, swipe-free but a tap away, deletable on the spot. |
+| 📥 **Excel Export** | One tap writes a real `.xlsx` (via `fastexcel`) straight to `Downloads/ExpenseTracker/` — an *Expenses* sheet and a *Monthly Summary* sheet, ready to open in Excel or Sheets. |
+| 🌓 **Fintech-dark theme** | Deep charcoal background, amber accent, category colors carried through charts, chips, and list rows. |
+| 💾 **100% local** | Room (SQLite) database — everything stays on your device until *you* export it. |
 
-The project lifecycle is driven by the **Rapid Application Development (RAD)** framework. By focusing on iterative prototyping and fast feedback loops, the app continuously evolves to meet practical user needs without getting bogged down in rigid planning phases.
+<div align="center">
+<img src="https://media.giphy.com/media/xT9IgG50Fb7Mi0prBC/giphy.gif" width="220" alt="money counting animation"/>
+</div>
+
+---
 
 ## 🛠 Tech Stack
-* **Language:** Kotlin
-* **Architecture:** Android Native
-* **Database:** Room Database (SQLite) for secure, local data persistence
-* **Build System:** Gradle with Kotlin Symbol Processing (KSP)
 
-## 🚀 Getting Started
-1. Clone the repository to your local machine.
-2. Open the project folder in Android Studio.
-3. Sync the Gradle files to download the required dependencies.
-4. Run the app on an Android emulator or a physical device via USB debugging.
+- **Language:** Kotlin (2.2.10)
+- **UI:** Jetpack Compose + Material 3
+- **Database:** Room (SQLite), KSP for codegen
+- **Excel export:** [`org.dhatim:fastexcel`](https://github.com/dhatim/fastexcel) — lightweight, AWT-free, Android-friendly
+- **Architecture:** MVVM — `ExpenseViewModel` exposes `StateFlow`s that the Compose screens collect
+- **Navigation:** No nav library — a bottom `AppNavigationBar` + local `remember` state switches between screens
+- **Min SDK:** 29 · **Target SDK:** 37
+
+---
+
+## 📂 Project structure
+
+```
+app/src/main/java/com/gem/expensetracker/
+├── MainActivity.kt              # Hosts the bottom nav + screen switching
+├── data/                        # Room entity, DAO, database, repository
+│   ├── Expense.kt
+│   ├── CategoryType.kt          # 👈 add/edit categories here
+│   ├── ExpenseDao.kt            # SQL queries (totals, monthly grouping, etc.)
+│   ├── ExpenseDatabase.kt
+│   └── ExpenseRepository.kt
+├── viewmodel/
+│   └── ExpenseViewModel.kt      # All app state lives here
+├── export/
+│   └── ExcelExporter.kt         # The .xlsx writer
+└── ui/
+    ├── screens/                 # DashboardScreen, AddExpenseScreen, CalendarScreen,
+    │                            # LeaderboardScreen, MonthDetailScreen, ExportScreen
+    ├── components/              # GlowingLineChart, CategoryChip, ExpenseListItem,
+    │                            # CategoryBreakdownBar, AppNavigationBar
+    └── theme/                   # Color.kt, Theme.kt, Type.kt — the fintech-dark palette
+```
+
+---
+
+## 🧑‍💻 How to edit it yourself
+
+1. **Open it up.** Clone or unzip the project, then open the root folder in **Android Studio** (Hedgehog or newer). Let Gradle sync — it'll pull Room, Compose, and `fastexcel` automatically.
+
+2. **Find the right file for what you want to change:**
+   - *Add or rename a category* → `data/CategoryType.kt`. Each entry is just `NAME("Label", 0xFFHEXCOLOR)` — the color flows through automatically to chips, list dots, and charts.
+   - *Change what a screen looks like* → its file in `ui/screens/`. Each screen is a single `@Composable fun`.
+   - *Change app-wide colors/fonts* → `ui/theme/Color.kt` and `Type.kt`. `FintechAccent` is the one color used almost everywhere for emphasis.
+   - *Change how totals are calculated* → `data/ExpenseDao.kt` (the SQL) and `viewmodel/ExpenseViewModel.kt` (how it's exposed as state).
+   - *Change what gets exported, or the sheet layout* → `export/ExcelExporter.kt`.
+   - *Add a new tab* → add an entry to the `NavigationTab` enum in `ui/components/AppNavigationBar.kt`, then wire it into the `when` block in `MainActivity.kt`.
+
+3. **Rebuild and run.** `Shift+F10` in Android Studio, or from a terminal:
+   ```bash
+   ./gradlew assembleDebug
+   ```
+   Install on a connected device/emulator with:
+   ```bash
+   ./gradlew installDebug
+   ```
+
+4. **If Gradle complains about a version** (Room, KSP, lifecycle, etc.), check `gradle/libs.versions.toml` first — nearly every dependency version lives there in one place.
+
+5. **No navigation library, no DI framework, no ViewModel injection library** — this project deliberately stays simple. If you add a new screen, follow the existing pattern: a `Composable` that takes `viewModel: ExpenseViewModel` and a couple of lambdas for navigation, nothing fancier.
+
+<div align="center">
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:121212,100:FFB703&height=120&section=footer" width="100%"/>
+
+Made with 🐛☕ and a stubborn refusal to use a spreadsheet by hand.
+
+</div>
