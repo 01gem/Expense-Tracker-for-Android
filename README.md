@@ -2,7 +2,7 @@
 
 <div align="center">
   <!-- Replace the URL below with a link to your preferred aesthetic animated GIF -->
-  <img src="[https://media.giphy.com/media/Lp9fP12D5M1oK/giphy.gif](https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTN5em84MHNnNTJxa204dzBuOXpjdjY1MnF3YmNzdHZsOGxsMTg0YiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Q8JhKDsvVxPRS/200.webp)" width="200" alt="Animated Aesthetic Character">
+  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTN5em84MHNnNTJxa204dzBuOXpjdjY1MnF3YmNzdHZsOGxsMTg0YiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Q8JhKDsvVxPRS/giphy.gif" width="200" alt="Animated Aesthetic Character">
 </div>
 
 ---
