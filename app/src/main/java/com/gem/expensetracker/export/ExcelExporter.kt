@@ -10,7 +10,6 @@ import org.dhatim.fastexcel.Workbook
 import java.io.OutputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 object ExcelExporter {
 
@@ -81,8 +80,8 @@ object ExcelExporter {
             }
 
             Result.success("Saved to Downloads/ExpenseTracker/$filename")
-        } catch (e: Exception) {
-            Result.failure(e)
+        } catch (ignore: Exception) {
+            Result.failure(ignore)
         }
     }
 }

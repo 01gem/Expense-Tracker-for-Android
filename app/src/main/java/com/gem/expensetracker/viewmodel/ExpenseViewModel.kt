@@ -45,9 +45,6 @@ class ExpenseViewModel(private val repository: ExpenseRepository) : ViewModel() 
         .flatMapLatest { year -> repository.getMonthlyTotalsForYear(year) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val availableYears: StateFlow<List<String>> = repository.getAvailableYears()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf(Year.now().toString()))
-
     val leaderboard: StateFlow<List<CategoryTotal>> = repository.getCategoryLeaderboard()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 

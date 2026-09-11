@@ -13,10 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.EventBusy
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -48,7 +45,7 @@ fun MonthDetailScreen(
     val formatter = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.getDefault())
     val title = try {
         YearMonth.parse(yearMonth).format(formatter)
-    } catch (e: Exception) {
+    } catch (ignore: Exception) {
         yearMonth
     }
 

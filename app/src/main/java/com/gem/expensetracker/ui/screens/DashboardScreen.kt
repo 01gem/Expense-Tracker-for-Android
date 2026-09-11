@@ -54,8 +54,8 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun DashboardScreen(
     viewModel: ExpenseViewModel,
-    onMonthClick: (String) -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onMonthClick: (String) -> Unit = {}
 ) {
     val yearTotal by viewModel.yearTotal.collectAsStateWithLifecycle()
     val monthlyTotals by viewModel.monthlyTotals.collectAsStateWithLifecycle()

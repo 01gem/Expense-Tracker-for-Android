@@ -118,8 +118,8 @@ class MainActivity : ComponentActivity() {
                                 } else {
                                     DashboardScreen(
                                         viewModel = viewModel,
-                                        onMonthClick = { detailMonth = it },
-                                        modifier = Modifier.padding(innerPadding)
+                                        modifier = Modifier.padding(innerPadding),
+                                        onMonthClick = { detailMonth = it }
                                     )
                                 }
                             }
