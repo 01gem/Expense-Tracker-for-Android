@@ -3,6 +3,8 @@ package com.gem.expensetracker.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -11,6 +13,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gem.expensetracker.ui.components.EmptyState
 import com.gem.expensetracker.ui.components.ExpenseListItem
 import com.gem.expensetracker.viewmodel.ExpenseViewModel
 import java.time.Instant
@@ -27,6 +30,11 @@ fun CalendarScreen(
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
     )
+
+    LaunchedEffect(Unit) {
+        datePickerState.selectedDateMillis =
+            LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+    }
     
     val selectedDate = remember(datePickerState.selectedDateMillis) {
         datePickerState.selectedDateMillis?.let {
@@ -55,18 +63,13 @@ fun CalendarScreen(
         )
 
         if (filteredExpenses.isEmpty()) {
-            Box(
+            EmptyState(
+                icon = Icons.Outlined.CalendarToday,
+                message = "No expenses for this date",
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(24.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "No expenses for this date",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                )
-            }
+                    .padding(24.dp)
+            )
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),

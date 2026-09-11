@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.EventBusy
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gem.expensetracker.ui.components.CategoryBreakdownBar
+import com.gem.expensetracker.ui.components.EmptyState
 import com.gem.expensetracker.ui.components.ExpenseListItem
 import com.gem.expensetracker.viewmodel.ExpenseViewModel
 import java.time.YearMonth
@@ -90,15 +92,11 @@ fun MonthDetailScreen(
         }
 
         if (expenses.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "No expenses this month",
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            EmptyState(
+                icon = Icons.Outlined.EventBusy,
+                message = "No expenses this month",
+                modifier = Modifier.fillMaxSize()
+            )
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),

@@ -17,8 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
-import com.gem.expensetracker.data.CategoryType
 import com.gem.expensetracker.ui.theme.ExpenseTrackerTheme
+import com.gem.expensetracker.ui.theme.categoryColor
 import com.gem.expensetracker.viewmodel.CategoryBreakdown
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -44,7 +44,7 @@ fun CategoryBreakdownBar(
             breakdown.forEach { item ->
                 val segmentWidth = (item.percentage * canvasWidth).toFloat()
                 drawRect(
-                    color = Color(item.category.colorHex),
+                    color = categoryColor(item.category),
                     topLeft = Offset(currentX, 0f),
                     size = Size(segmentWidth, size.height)
                 )
@@ -77,10 +77,10 @@ fun CategoryBreakdownBar(
                         modifier = Modifier
                             .size(8.dp)
                             .clip(CircleShape)
-                            .background(Color(item.category.colorHex))
+                            .background(categoryColor(item.category))
                     )
                     Text(
-                        text = item.category.label,
+                        text = item.category,
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -102,9 +102,9 @@ fun CategoryBreakdownBarPreview() {
     ExpenseTrackerTheme {
         CategoryBreakdownBar(
             breakdown = listOf(
-                CategoryBreakdown(CategoryType.FOOD, 1500.0, 0.45),
-                CategoryBreakdown(CategoryType.TRANSPORT, 800.0, 0.24),
-                CategoryBreakdown(CategoryType.BILLS, 1000.0, 0.31)
+                CategoryBreakdown("Food", 1500.0, 0.45),
+                CategoryBreakdown("Transport", 800.0, 0.24),
+                CategoryBreakdown("Bills", 1000.0, 0.31)
             ),
             modifier = Modifier.padding(16.dp)
         )

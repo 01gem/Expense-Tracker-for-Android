@@ -50,14 +50,8 @@ object ExcelExporter {
                 val sortedExpenses = expenses.sortedBy { it.date }
                 sortedExpenses.forEachIndexed { index, expense ->
                     val row = index + 1
-                    val categoryLabel = try {
-                        CategoryType.valueOf(expense.category).label
-                    } catch (e: Exception) {
-                        expense.category
-                    }
-
                     wsExpenses.value(row, 0, expense.date)
-                    wsExpenses.value(row, 1, categoryLabel)
+                    wsExpenses.value(row, 1, expense.category)
                     wsExpenses.value(row, 2, expense.note)
                     wsExpenses.value(row, 3, expense.amount)
                     wsExpenses.style(row, 3).format("#,##0.00").set()

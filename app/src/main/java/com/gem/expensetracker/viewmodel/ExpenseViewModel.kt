@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.gem.expensetracker.data.CategoryTotal
-import com.gem.expensetracker.data.CategoryType
 import com.gem.expensetracker.data.Expense
 import com.gem.expensetracker.data.ExpenseDatabase
 import com.gem.expensetracker.data.ExpenseRepository
@@ -25,7 +24,7 @@ import kotlinx.coroutines.withContext
 import java.time.Year
 
 data class CategoryBreakdown(
-    val category: CategoryType,
+    val category: String,
     val total: Double,
     val percentage: Double
 )
@@ -94,14 +93,9 @@ class ExpenseViewModel(private val repository: ExpenseRepository) : ViewModel() 
 
                     expenses.groupBy { it.category }
                         .map { (categoryName, categoryExpenses) ->
-                            val categoryType = try {
-                                CategoryType.valueOf(categoryName)
-                            } catch (e: Exception) {
-                                CategoryType.OTHER
-                            }
                             val categoryTotal = categoryExpenses.sumOf { it.amount }
                             CategoryBreakdown(
-                                category = categoryType,
+                                category = categoryName,
                                 total = categoryTotal,
                                 percentage = categoryTotal / totalMonthAmount
                             )

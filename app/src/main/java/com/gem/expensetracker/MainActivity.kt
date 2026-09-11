@@ -4,6 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -94,47 +99,55 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) { innerPadding ->
-                    when (selectedTab) {
-                        NavigationTab.HOME -> {
-                            if (detailMonth != null) {
-                                MonthDetailScreen(
+                    AnimatedContent(
+                        targetState = selectedTab to detailMonth,
+                        transitionSpec = {
+                            fadeIn(tween(200)) togetherWith fadeOut(tween(150))
+                        },
+                        label = "screenTransition"
+                    ) { (tab, month) ->
+                        when (tab) {
+                            NavigationTab.HOME -> {
+                                if (month != null) {
+                                    MonthDetailScreen(
+                                        viewModel = viewModel,
+                                        yearMonth = month,
+                                        onBack = { detailMonth = null },
+                                        modifier = Modifier.padding(innerPadding)
+                                    )
+                                } else {
+                                    DashboardScreen(
+                                        viewModel = viewModel,
+                                        onMonthClick = { detailMonth = it },
+                                        modifier = Modifier.padding(innerPadding)
+                                    )
+                                }
+                            }
+                            NavigationTab.ADD -> {
+                                AddExpenseScreen(
                                     viewModel = viewModel,
-                                    yearMonth = detailMonth!!,
-                                    onBack = { detailMonth = null },
-                                    modifier = Modifier.padding(innerPadding)
-                                )
-                            } else {
-                                DashboardScreen(
-                                    viewModel = viewModel,
-                                    onMonthClick = { detailMonth = it },
+                                    onDone = { selectedTab = NavigationTab.HOME },
                                     modifier = Modifier.padding(innerPadding)
                                 )
                             }
-                        }
-                        NavigationTab.ADD -> {
-                            AddExpenseScreen(
-                                viewModel = viewModel,
-                                onDone = { selectedTab = NavigationTab.HOME },
-                                modifier = Modifier.padding(innerPadding)
-                            )
-                        }
-                        NavigationTab.EXPORT -> {
-                            ExportScreen(
-                                viewModel = viewModel,
-                                modifier = Modifier.padding(innerPadding)
-                            )
-                        }
-                        NavigationTab.CALENDAR -> {
-                            CalendarScreen(
-                                viewModel = viewModel,
-                                modifier = Modifier.padding(innerPadding)
-                            )
-                        }
-                        NavigationTab.LEADERBOARD -> {
-                            LeaderboardScreen(
-                                viewModel = viewModel,
-                                modifier = Modifier.padding(innerPadding)
-                            )
+                            NavigationTab.EXPORT -> {
+                                ExportScreen(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.padding(innerPadding)
+                                )
+                            }
+                            NavigationTab.CALENDAR -> {
+                                CalendarScreen(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.padding(innerPadding)
+                                )
+                            }
+                            NavigationTab.LEADERBOARD -> {
+                                LeaderboardScreen(
+                                    viewModel = viewModel,
+                                    modifier = Modifier.padding(innerPadding)
+                                )
+                            }
                         }
                     }
                 }

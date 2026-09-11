@@ -1,6 +1,9 @@
 package com.gem.expensetracker.ui.screens
 
 import android.widget.Toast
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,10 +39,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gem.expensetracker.ui.components.EmptyState
 import com.gem.expensetracker.ui.components.GlowingLineChart
 import com.gem.expensetracker.viewmodel.ExpenseViewModel
 import kotlinx.coroutines.launch
@@ -59,6 +64,12 @@ fun DashboardScreen(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     var isExporting by remember { mutableStateOf(false) }
+
+    val animatedTotal by animateFloatAsState(
+        targetValue = yearTotal.toFloat(),
+        animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing),
+        label = "yearTotal"
+    )
 
     val today = LocalDate.now()
     val currentMonth = today.format(DateTimeFormatter.ofPattern("yyyy-MM"))
@@ -145,10 +156,11 @@ fun DashboardScreen(
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "₱%,.2f".format(yearTotal),
+                        text = "₱%,.2f".format(animatedTotal),
                         style = MaterialTheme.typography.displayMedium,
                         fontWeight = FontWeight.Black,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontFamily = FontFamily.Monospace
                     )
                     
                     Spacer(modifier = Modifier.width(12.dp))
@@ -187,27 +199,13 @@ fun DashboardScreen(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp)
             ) {
-                Box(
+                EmptyState(
+                    icon = Icons.Outlined.Info,
+                    message = "No expenses logged yet",
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(
-                            imageVector = Icons.Outlined.Info,
-                            contentDescription = null,
-                            modifier = Modifier.size(48.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
-                        )
-                        Text(
-                            text = "No expenses logged yet",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                            modifier = Modifier.padding(top = 8.dp)
-                        )
-                    }
-                }
+                        .padding(vertical = 48.dp)
+                )
             }
         }
     }
