@@ -4,21 +4,11 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.gem.expensetracker.data.CategoryTotal
-import com.gem.expensetracker.data.Expense
-import com.gem.expensetracker.data.ExpenseDatabase
-import com.gem.expensetracker.data.ExpenseRepository
-import com.gem.expensetracker.data.MonthlyTotal
+import com.gem.expensetracker.data.*
 import com.gem.expensetracker.export.ExcelExporter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.Year
@@ -28,6 +18,8 @@ data class CategoryBreakdown(
     val total: Double,
     val percentage: Double
 )
+
+enum class LeaderboardType { CATEGORY, YEAR, MONTH }
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ExpenseViewModel(private val repository: ExpenseRepository) : ViewModel() {
@@ -45,14 +37,43 @@ class ExpenseViewModel(private val repository: ExpenseRepository) : ViewModel() 
         .flatMapLatest { year -> repository.getMonthlyTotalsForYear(year) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val leaderboard: StateFlow<List<CategoryTotal>> = repository.getCategoryLeaderboard()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    val availableYears: StateFlow<List<String>> = repository.getAvailableYears()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf(Year.now().toString()))
 
     val allExpenses: StateFlow<List<Expense>> = repository.getAll()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    // Leaderboard state
+    val leaderboardType = MutableStateFlow(LeaderboardType.CATEGORY)
+    val leaderboardYear = MutableStateFlow(Year.now().toString())
+
+    val categoryLeaderboard: StateFlow<List<CategoryTotal>> = leaderboardYear.flatMapLatest { year ->
+        if (year == "ALL") repository.getCategoryLeaderboard()
+        else repository.getCategoryLeaderboardForYear(year)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val yearlyLeaderboard: StateFlow<List<YearTotal>> = repository.getYearlyLeaderboard()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val monthLeaderboard: StateFlow<List<MonthlyTotal>> = leaderboardYear.flatMapLatest { year ->
+        val actualYear = if (year == "ALL") Year.now().toString() else year
+        repository.getMonthlyTotalsForYear(actualYear)
+    }.map { it.sortedByDescending { total -> total.total } }
+    .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
     fun selectYear(year: String) {
         selectedYear.value = year
+    }
+
+    fun selectLeaderboardType(type: LeaderboardType) {
+        leaderboardType.value = type
+        if (type == LeaderboardType.MONTH && leaderboardYear.value == "ALL") {
+            leaderboardYear.value = Year.now().toString()
+        }
+    }
+
+    fun selectLeaderboardYear(year: String) {
+        leaderboardYear.value = year
     }
 
     fun addExpense(amount: Double, category: String, note: String, date: String) {

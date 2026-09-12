@@ -4,19 +4,16 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 data class MonthlyTotal(val month: String, val total: Double)
 data class CategoryTotal(val category: String, val total: Double)
+data class YearTotal(val year: String, val total: Double)
 
 @Dao
 interface ExpenseDao {
     @Insert
     suspend fun insert(expense: Expense)
-
-    @Update
-    suspend fun update(expense: Expense)
 
     @Delete
     suspend fun delete(expense: Expense)
@@ -38,4 +35,10 @@ interface ExpenseDao {
 
     @Query("SELECT category, SUM(amount) AS total FROM expenses GROUP BY category ORDER BY total DESC")
     fun getCategoryLeaderboard(): Flow<List<CategoryTotal>>
+
+    @Query("SELECT category, SUM(amount) AS total FROM expenses WHERE substr(date,1,4) = :year GROUP BY category ORDER BY total DESC")
+    fun getCategoryLeaderboardForYear(year: String): Flow<List<CategoryTotal>>
+
+    @Query("SELECT substr(date,1,4) AS year, SUM(amount) AS total FROM expenses GROUP BY year ORDER BY total DESC")
+    fun getYearlyLeaderboard(): Flow<List<YearTotal>>
 }
