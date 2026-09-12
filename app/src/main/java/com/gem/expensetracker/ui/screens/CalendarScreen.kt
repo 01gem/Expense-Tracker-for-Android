@@ -25,19 +25,27 @@ fun CalendarScreen(
     viewModel: ExpenseViewModel,
     modifier: Modifier = Modifier
 ) {
+    val phZone = ZoneId.of("Asia/Manila")
+    val utcZone = ZoneId.of("UTC")
+    
+    // DatePickerState expects millis at Midnight UTC
+    fun getTodayUtcMillis() = LocalDate.now(phZone)
+        .atStartOfDay(utcZone)
+        .toInstant()
+        .toEpochMilli()
+
     val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        initialSelectedDateMillis = getTodayUtcMillis()
     )
 
     LaunchedEffect(Unit) {
-        datePickerState.selectedDateMillis =
-            LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        datePickerState.selectedDateMillis = getTodayUtcMillis()
     }
     
     val selectedDate = remember(datePickerState.selectedDateMillis) {
         datePickerState.selectedDateMillis?.let {
-            Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
-        } ?: LocalDate.now()
+            Instant.ofEpochMilli(it).atZone(utcZone).toLocalDate()
+        } ?: LocalDate.now(phZone)
     }
 
     val allExpenses by viewModel.allExpenses.collectAsStateWithLifecycle()

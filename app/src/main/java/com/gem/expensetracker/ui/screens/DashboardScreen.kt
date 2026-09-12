@@ -38,8 +38,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gem.expensetracker.ui.components.EmptyState
 import com.gem.expensetracker.ui.components.GlowingLineChart
+import com.gem.expensetracker.ui.components.MonthGrid
 import com.gem.expensetracker.viewmodel.ExpenseViewModel
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -48,6 +50,7 @@ fun DashboardScreen(
     modifier: Modifier = Modifier,
     onMonthClick: (String) -> Unit = {}
 ) {
+    val phZone = ZoneId.of("Asia/Manila")
     val yearTotal by viewModel.yearTotal.collectAsStateWithLifecycle()
     val monthlyTotals by viewModel.monthlyTotals.collectAsStateWithLifecycle()
     val selectedYear by viewModel.selectedYear.collectAsStateWithLifecycle()
@@ -58,7 +61,7 @@ fun DashboardScreen(
         label = "yearTotal"
     )
 
-    val today = LocalDate.now()
+    val today = LocalDate.now(phZone)
     val currentMonth = today.format(DateTimeFormatter.ofPattern("yyyy-MM"))
 
     Column(
@@ -143,6 +146,21 @@ fun DashboardScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
+            )
+        }
+
+        // Month Grid Card
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp)
+        ) {
+            MonthGrid(
+                monthlyTotals = monthlyTotals,
+                currentMonth = currentMonth,
+                onMonthClick = onMonthClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp)
             )
         }
 

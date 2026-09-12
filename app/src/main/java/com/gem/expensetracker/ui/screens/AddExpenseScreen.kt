@@ -40,6 +40,7 @@ import com.gem.expensetracker.ui.theme.FintechAccent
 import com.gem.expensetracker.ui.theme.FintechWhite
 import com.gem.expensetracker.viewmodel.ExpenseViewModel
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -49,10 +50,11 @@ fun AddExpenseScreen(
     onDone: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val phZone = ZoneId.of("Asia/Manila")
     var amount by remember { mutableStateOf("") }
     var category by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
-    var date by remember { mutableStateOf(LocalDate.now()) }
+    var date by remember { mutableStateOf(LocalDate.now(phZone)) }
     
     val context = LocalContext.current
     val dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.getDefault())
