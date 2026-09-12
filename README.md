@@ -4,6 +4,9 @@
 
 <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&size=22&pause=1000&color=FFB703&center=true&vCenter=true&width=460&lines=%F0%9F%92%B8+Log+it.;%F0%9F%93%8A+See+it.;%F0%9F%8F%86+Rank+it.;%F0%9F%93%A5+Export+it." alt="Typing SVG" />
 
+<br/>
+<br/>
+
 <img src="https://img.shields.io/badge/Kotlin-2.2.10-FFB703?style=for-the-badge&logo=kotlin&logoColor=121212"/>
 <img src="https://img.shields.io/badge/Jetpack%20Compose-Material%203-FFB703?style=for-the-badge&logo=jetpackcompose&logoColor=121212"/>
 <img src="https://img.shields.io/badge/Room-SQLite-FFB703?style=for-the-badge&logo=sqlite&logoColor=121212"/>
