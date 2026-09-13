@@ -38,6 +38,10 @@ class ExpenseViewModel(private val repository: ExpenseRepository) : ViewModel() 
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val availableYears: StateFlow<List<String>> = repository.getAvailableYears()
+        .map { years ->
+            val current = Year.now().toString()
+            if (years.contains(current)) years else (years + current).sortedDescending()
+        }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf(Year.now().toString()))
 
     val allExpenses: StateFlow<List<Expense>> = repository.getAll()
