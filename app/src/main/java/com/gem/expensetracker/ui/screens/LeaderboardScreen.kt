@@ -16,6 +16,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gem.expensetracker.ui.components.EmptyState
 import com.gem.expensetracker.ui.theme.FintechAccent
 import com.gem.expensetracker.ui.theme.FintechDarkGray
+import com.gem.expensetracker.util.CurrencyUtils
 import com.gem.expensetracker.viewmodel.ExpenseViewModel
 import com.gem.expensetracker.viewmodel.LeaderboardType
 import java.time.YearMonth
@@ -218,7 +219,7 @@ private fun LeaderboardItem(
             }
 
             Text(
-                text = "₱%,.2f".format(amount),
+                text = CurrencyUtils.formatPeso(amount),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Black,
                 color = if (isTopThree) FintechAccent else MaterialTheme.colorScheme.onSurface

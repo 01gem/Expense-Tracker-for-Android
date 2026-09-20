@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gem.expensetracker.data.Expense
 import com.gem.expensetracker.ui.theme.categoryColor
+import com.gem.expensetracker.util.CurrencyUtils
 
 @Suppress("DEPRECATION")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,7 +105,7 @@ fun ExpenseListItem(
                 }
 
                 Text(
-                    text = "₱%,.2f".format(expense.amount),
+                    text = CurrencyUtils.formatPeso(expense.amount),
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.primary,
@@ -118,7 +119,7 @@ fun ExpenseListItem(
         AlertDialog(
             onDismissRequest = { showDeleteConfirm = false },
             title = { Text("Delete expense?") },
-            text = { Text("Delete this ₱%,.2f expense in %s?".format(expense.amount, expense.category)) },
+            text = { Text("Delete this ${CurrencyUtils.formatPeso(expense.amount)} expense in ${expense.category}?") },
             confirmButton = {
                 TextButton(
                     onClick = { onDelete(); showDeleteConfirm = false },

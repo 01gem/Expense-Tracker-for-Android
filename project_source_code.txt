@@ -656,6 +656,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import com.gem.expensetracker.ui.theme.ExpenseTrackerTheme
 import com.gem.expensetracker.ui.theme.categoryColor
+import com.gem.expensetracker.util.CurrencyUtils
 import com.gem.expensetracker.viewmodel.CategoryBreakdown
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -722,7 +723,7 @@ fun CategoryBreakdownBar(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = "₱%,.2f".format(item.total),
+                        text = CurrencyUtils.formatPeso(item.total),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -833,6 +834,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gem.expensetracker.data.Expense
 import com.gem.expensetracker.ui.theme.categoryColor
+import com.gem.expensetracker.util.CurrencyUtils
 
 @Suppress("DEPRECATION")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -915,7 +917,7 @@ fun ExpenseListItem(
                 }
 
                 Text(
-                    text = "₱%,.2f".format(expense.amount),
+                    text = CurrencyUtils.formatPeso(expense.amount),
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.primary,
@@ -929,7 +931,7 @@ fun ExpenseListItem(
         AlertDialog(
             onDismissRequest = { showDeleteConfirm = false },
             title = { Text("Delete expense?") },
-            text = { Text("Delete this ₱%,.2f expense in %s?".format(expense.amount, expense.category)) },
+            text = { Text("Delete this ${CurrencyUtils.formatPeso(expense.amount)} expense in ${expense.category}?") },
             confirmButton = {
                 TextButton(
                     onClick = { onDelete(); showDeleteConfirm = false },
@@ -1008,7 +1010,6 @@ fun GlowingLineChart(
         ) {
             val canvasWidth = size.width
             val canvasHeight = size.height
-            val xStep = canvasWidth / 11 // Connect 12 points over 11 intervals
 
             val points = months.mapIndexed { index, total ->
                 val x = index * (canvasWidth / 12) + (canvasWidth / 24) // Center point in the month slot
@@ -1247,6 +1248,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gem.expensetracker.ui.theme.FintechAccent
 import com.gem.expensetracker.ui.theme.FintechWhite
+import com.gem.expensetracker.util.CurrencyUtils
 import com.gem.expensetracker.viewmodel.ExpenseViewModel
 import java.time.LocalDate
 import java.time.ZoneId
@@ -1294,7 +1296,7 @@ fun AddExpenseScreen(
             value = amount,
             onValueChange = { if (it.isEmpty() || it.toDoubleOrNull() != null) amount = it },
             label = { Text("Amount") },
-            prefix = { Text("₱") },
+            prefix = { Text(CurrencyUtils.getPesoSymbol()) },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             singleLine = true
@@ -1396,7 +1398,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -1474,7 +1475,7 @@ fun CalendarScreen(
         )
 
         HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
         )
 
@@ -1736,7 +1737,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -1744,6 +1744,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gem.expensetracker.ui.components.EmptyState
 import com.gem.expensetracker.ui.components.GlowingLineChart
 import com.gem.expensetracker.ui.components.MonthGrid
+import com.gem.expensetracker.util.CurrencyUtils
 import com.gem.expensetracker.viewmodel.ExpenseViewModel
 import java.time.LocalDate
 import java.time.ZoneId
@@ -1817,11 +1818,10 @@ fun DashboardScreen(
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "₱%,.2f".format(animatedTotal),
+                        text = CurrencyUtils.formatPeso(animatedTotal.toDouble()),
                         style = MaterialTheme.typography.displayMedium,
                         fontWeight = FontWeight.Black,
                         color = MaterialTheme.colorScheme.onSurface,
-                        fontFamily = FontFamily.Monospace
                     )
 
                     Spacer(modifier = Modifier.width(12.dp))
@@ -2037,6 +2037,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gem.expensetracker.ui.components.EmptyState
 import com.gem.expensetracker.ui.theme.FintechAccent
 import com.gem.expensetracker.ui.theme.FintechDarkGray
+import com.gem.expensetracker.util.CurrencyUtils
 import com.gem.expensetracker.viewmodel.ExpenseViewModel
 import com.gem.expensetracker.viewmodel.LeaderboardType
 import java.time.YearMonth
@@ -2239,7 +2240,7 @@ private fun LeaderboardItem(
             }
 
             Text(
-                text = "₱%,.2f".format(amount),
+                text = CurrencyUtils.formatPeso(amount),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Black,
                 color = if (isTopThree) FintechAccent else MaterialTheme.colorScheme.onSurface
@@ -2277,6 +2278,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gem.expensetracker.ui.components.CategoryBreakdownBar
 import com.gem.expensetracker.ui.components.EmptyState
 import com.gem.expensetracker.ui.components.ExpenseListItem
+import com.gem.expensetracker.util.CurrencyUtils
 import com.gem.expensetracker.viewmodel.ExpenseViewModel
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -2329,7 +2331,7 @@ fun MonthDetailScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = "Total Spending: ₱%,.2f".format(totalAmount),
+                text = "Total Spending: ${CurrencyUtils.formatPeso(totalAmount)}",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Black,
                 color = MaterialTheme.colorScheme.primary
@@ -2477,6 +2479,44 @@ val Typography = Typography(
     )
     */
 )
+
+================================================================================
+FILE: app/src/main/java/com/gem/expensetracker/util/CurrencyUtils.kt
+================================================================================
+package com.gem.expensetracker.util
+
+import java.text.NumberFormat
+import java.util.Locale
+
+/**
+ * Utility for formatting currency consistently across different Android devices.
+ *
+ * Using java.text.NumberFormat is more reliable for rendering the Philippine Peso sign (₱)
+ * on devices with restrictive system fonts (like some Xiaomi/POCO models) because it
+ * leverages the system's internal localization and font fallback mechanisms.
+ */
+object CurrencyUtils {
+    private val phLocale = Locale("en", "PH")
+    private val currencyFormatter = NumberFormat.getCurrencyInstance(phLocale)
+
+    /**
+     * Formats a double amount into a Philippine Peso string (e.g., ₱1,234.56).
+     */
+    fun formatPeso(amount: Double): String {
+        return try {
+            currencyFormatter.format(amount)
+        } catch (e: Exception) {
+            // Manual fallback if system formatter fails unexpectedly
+            "\u20B1%,.2f".format(amount)
+        }
+    }
+
+    /**
+     * Returns the Unicode Peso symbol (\u20B1).
+     * Explicit Unicode escape is sometimes safer for compilers/bundlers than literal ₱.
+     */
+    fun getPesoSymbol(): String = "\u20B1"
+}
 
 ================================================================================
 FILE: app/src/main/java/com/gem/expensetracker/viewmodel/ExpenseViewModel.kt
@@ -2637,7 +2677,7 @@ FILE: app/src/main/res/values/strings.xml
 FILE: gradle/libs.versions.toml
 ================================================================================
 [versions]
-agp = "9.4.0"
+agp = "9.4.1"
 coreKtx = "1.10.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
@@ -2647,7 +2687,7 @@ activityCompose = "1.8.0"
 kotlin = "2.2.10"
 composeBom = "2026.02.01"
 room = "2.8.0"
-ksp = "2.2.10-2.0.2"
+ksp = "2.3.6"
 lifecycleViewmodelCompose = "2.8.7"
 fastexcel = "0.20.2"
 

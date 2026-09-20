@@ -39,6 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gem.expensetracker.ui.components.EmptyState
 import com.gem.expensetracker.ui.components.GlowingLineChart
 import com.gem.expensetracker.ui.components.MonthGrid
+import com.gem.expensetracker.util.CurrencyUtils
 import com.gem.expensetracker.viewmodel.ExpenseViewModel
 import java.time.LocalDate
 import java.time.ZoneId
@@ -112,11 +113,10 @@ fun DashboardScreen(
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = "₱%,.2f".format(animatedTotal),
+                        text = CurrencyUtils.formatPeso(animatedTotal.toDouble()),
                         style = MaterialTheme.typography.displayMedium,
                         fontWeight = FontWeight.Black,
                         color = MaterialTheme.colorScheme.onSurface,
-                        fontFamily = FontFamily.Monospace
                     )
                     
                     Spacer(modifier = Modifier.width(12.dp))

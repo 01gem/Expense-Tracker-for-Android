@@ -24,6 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gem.expensetracker.ui.components.CategoryBreakdownBar
 import com.gem.expensetracker.ui.components.EmptyState
 import com.gem.expensetracker.ui.components.ExpenseListItem
+import com.gem.expensetracker.util.CurrencyUtils
 import com.gem.expensetracker.viewmodel.ExpenseViewModel
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -76,7 +77,7 @@ fun MonthDetailScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = "Total Spending: ₱%,.2f".format(totalAmount),
+                text = "Total Spending: ${CurrencyUtils.formatPeso(totalAmount)}",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Black,
                 color = MaterialTheme.colorScheme.primary

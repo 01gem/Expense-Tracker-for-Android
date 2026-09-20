@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gem.expensetracker.ui.theme.FintechAccent
 import com.gem.expensetracker.ui.theme.FintechWhite
+import com.gem.expensetracker.util.CurrencyUtils
 import com.gem.expensetracker.viewmodel.ExpenseViewModel
 import java.time.LocalDate
 import java.time.ZoneId
@@ -85,7 +86,7 @@ fun AddExpenseScreen(
             value = amount,
             onValueChange = { if (it.isEmpty() || it.toDoubleOrNull() != null) amount = it },
             label = { Text("Amount") },
-            prefix = { Text("₱") },
+            prefix = { Text(CurrencyUtils.getPesoSymbol()) },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             singleLine = true

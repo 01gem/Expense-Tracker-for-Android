@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import com.gem.expensetracker.ui.theme.ExpenseTrackerTheme
 import com.gem.expensetracker.ui.theme.categoryColor
+import com.gem.expensetracker.util.CurrencyUtils
 import com.gem.expensetracker.viewmodel.CategoryBreakdown
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -85,7 +86,7 @@ fun CategoryBreakdownBar(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = "₱%,.2f".format(item.total),
+                        text = CurrencyUtils.formatPeso(item.total),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
